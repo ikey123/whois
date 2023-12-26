@@ -41,16 +41,21 @@
     <script>
         function lookupWhois() {
             // 获取输入的域名
-            var domain = document.getElementById('domain').value;
+            var fullDomain = document.getElementById('domain').value;
+
+            // 使用split方法拆分域名
+            var parts = fullDomain.split('.');
+            var name = parts[0];
+            var suffix = parts[1];
 
             // 使用fetch进行API调用
-            fetch(`https://whois.freeaiapi.xyz/?name=${domain}`)
+            fetch(`https://whois.freeaiapi.xyz/?name=${name}&suffix=${suffix}`)
                 .then(response => response.json())
                 .then(data => {
                     // 检查API响应是否成功
                     if (data.success) {
                         // 处理成功的情况，这里假设API返回了一个字段叫做 'whoisData'
-                        var result = `Whois information for ${domain}: ${data.whoisData}`;
+                        var result = `Whois information for ${fullDomain}: ${data.whoisData}`;
                     } else {
                         // 处理错误的情况
                         var result = `Error: ${data.message}`;
