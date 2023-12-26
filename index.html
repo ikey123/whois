@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whois Lookup</title>
     <style>
-        /* Your CSS Styles Here */
+        /* 你的CSS样式在这里 */
     </style>
 </head>
 <body>
@@ -29,13 +29,17 @@
             
             xhr.onload = function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    var responseData = JSON.parse(xhr.responseText);
-                    if (responseData.success) {
-                        var result = `Whois information for ${fullDomain}: ${responseData.whoisData}`;
-                    } else {
-                        var result = `Error: ${responseData.message}`;
+                    try {
+                        var responseData = JSON.parse(xhr.responseText);
+                        if (responseData.success) {
+                            var result = `Whois information for ${fullDomain}: ${responseData.whoisData}`;
+                        } else {
+                            var result = `Error: ${responseData.message}`;
+                        }
+                        document.getElementById('result').innerHTML = result;
+                    } catch (error) {
+                        console.error('Error parsing JSON response:', error);
                     }
-                    document.getElementById('result').innerHTML = result;
                 } else {
                     console.error('Request failed with status:', xhr.status);
                 }
