@@ -5,28 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whois Lookup</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-
-        #whois-container {
-            text-align: center;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-        }
-
-        #result {
-            margin-top: 20px;
-        }
+        /* Your CSS Styles Here */
     </style>
 </head>
 <body>
@@ -40,39 +19,33 @@
 
     <script>
         function lookupWhois() {
-            // 获取输入的域名
             var fullDomain = document.getElementById('domain').value;
-
-            // 使用split方法拆分域名
             var parts = fullDomain.split('.');
             var name = parts[0];
             var suffix = parts[1];
 
-            // 使用fetch进行API调用
-            fetch(`/api/whois/?name=${name}&suffix=${suffix}`)
-                //.then(response => response.json())
-                .then(response => {
-                  if (!response.ok) {
-                  throw new Error(`HTTP error! Status: ${response.status}`);
-                       }
-                          return response.text();
-                    })
-                .then(data => {
-                    // 检查API响应是否成功
-                    if (data.success) {
-                        // 处理成功的情况，这里假设API返回了一个字段叫做 'whoisData'
-                        var result = `Whois information for ${fullDomain}: ${data.whoisData}`;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', `/api/whois/?name=${name}&suffix=${suffix}`, true);
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    var responseData = JSON.parse(xhr.responseText);
+                    if (responseData.success) {
+                        var result = `Whois information for ${fullDomain}: ${responseData.whoisData}`;
                     } else {
-                        // 处理错误的情况
-                        var result = `Error: ${data.message}`;
+                        var result = `Error: ${responseData.message}`;
                     }
-
-                    // 将结果显示在页面上
                     document.getElementById('result').innerHTML = result;
-                })
-                .catch(error => {
-                    console.error("An error occurred:", error);
-                });
+                } else {
+                    console.error('Request failed with status:', xhr.status);
+                }
+            };
+
+            xhr.onerror = function() {
+                console.error('An error occurred during the request.');
+            };
+
+            xhr.send();
         }
     </script>
 </body>
