@@ -1,6 +1,15 @@
 {
-  "rewrites": [
-    { "source": "/api/whois/:path*", "destination": "https://whois.freeaiapi.xyz/:path*" },
-    { "source": "/(.*)", "destination": "/$1" }
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/whois/(.*)",
+      "dest": "https://whois.freeaiapi.xyz/:1",
+      "methods": ["GET"]
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1",
+      "headers": {"Cache-Control": "public, max-age=3600"}
+    }
   ]
 }
