@@ -50,7 +50,13 @@
 
             // 使用fetch进行API调用
             fetch(`/api/whois/?name=${name}&suffix=${suffix}`)
-                .then(response => response.json())
+                //.then(response => response.json())
+                .then(response => {
+                  if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+                       }
+                          return response.json();
+                    })
                 .then(data => {
                     // 检查API响应是否成功
                     if (data.success) {
