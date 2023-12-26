@@ -1,9 +1,8 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/whois/(.*)",
-      "dest": "https://whois.freeaiapi.xyz/:1",
-      "methods": ["GET"]
+      "source": "/api/whois/:path*",
+      "destination": "https://whois.freeaiapi.xyz/:path*"
     }
   ]
 }
