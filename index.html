@@ -55,7 +55,7 @@
                   if (!response.ok) {
                   throw new Error(`HTTP error! Status: ${response.status}`);
                        }
-                          return response.json();
+                          return response.text();
                     })
                 .then(data => {
                     // 检查API响应是否成功
