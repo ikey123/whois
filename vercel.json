@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "src": "/api/whois/:path*",
+      "dest": "https://whois.freeaiapi.xyz/:path*",
+      "methods": ["GET"]
+    }
+  ]
+}
