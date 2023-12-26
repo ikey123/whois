@@ -43,12 +43,25 @@
             // 获取输入的域名
             var domain = document.getElementById('domain').value;
 
-            // 在这里可以使用Ajax或其他方式向服务器发送查询请求
-            // 这里只是一个示例，显示一个简单的结果
-            var result = "Whois information for " + domain + " will be displayed here.";
+            // 使用fetch进行API调用
+            fetch(`https://whois.freeaiapi.xyz/?name=${domain}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 检查API响应是否成功
+                    if (data.success) {
+                        // 处理成功的情况，这里假设API返回了一个字段叫做 'whoisData'
+                        var result = `Whois information for ${domain}: ${data.whoisData}`;
+                    } else {
+                        // 处理错误的情况
+                        var result = `Error: ${data.message}`;
+                    }
 
-            // 将结果显示在页面上
-            document.getElementById('result').innerHTML = result;
+                    // 将结果显示在页面上
+                    document.getElementById('result').innerHTML = result;
+                })
+                .catch(error => {
+                    console.error("An error occurred:", error);
+                });
         }
     </script>
 </body>
