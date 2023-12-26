@@ -49,7 +49,7 @@
             var suffix = parts[1];
 
             // 使用fetch进行API调用
-            fetch(`https://whois.freeaiapi.xyz/?name=${name}&suffix=${suffix}`)
+            fetch(`/api/whois/?name=${name}&suffix=${suffix}`)
                 .then(response => response.json())
                 .then(data => {
                     // 检查API响应是否成功
