@@ -1,24 +1,36 @@
-module.exports = async (req, res) => {
+async function lookupWhois() {
     try {
-        const { name, suffix } = req.query;
-        const apiUrl = `https://whois.freeaiapi.xyz/?name=${encodeURIComponent(name)}&suffix=${encodeURIComponent(suffix)}`;
-        
-        // 输出请求信息到日志中
-        console.log('Request URL:', apiUrl);
+        const fullDomain = document.getElementById('domain').value;
+        const parts = fullDomain.split('.');
+        const name = parts[0];
+        const suffix = parts[1];
+
+        // 修改这里的URL为你的Vercel Serverless Function的路径
+        const apiUrl = `/api/whois?name=${name}&suffix=${suffix}`;
+
+        console.log('Requesting:', apiUrl);
 
         const response = await fetch(apiUrl);
-        const data = await response.json();
 
-        // 输出响应数据到日志中
-        console.log('Response data:', data);
+        console.log('Response:', response);
 
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET');
-        res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        if (!response.ok) {
+            throw new Error(`Error: Fetch failed with status ${response.status}`);
+        }
 
-        res.status(response.status).json(data);
+        const responseData = await response.json();
+
+        console.log('Response Data:', responseData);
+
+        if (responseData.success) {
+            const result = `Whois information for ${fullDomain}: ${responseData.whoisData}`;
+            document.getElementById('result').innerHTML = result;
+        } else {
+            const result = `Error: ${responseData.message}`;
+            document.getElementById('result').innerHTML = result;
+        }
     } catch (error) {
-        console.error('Error occurred in serverless function:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error('An error occurred:', error);
+        document.getElementById('result').innerHTML = `Error: ${error.message}`;
     }
-};
+}
