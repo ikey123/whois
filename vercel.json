@@ -1,15 +1,9 @@
 {
-  "version": 2,
   "routes": [
     {
       "src": "/api/whois/(.*)",
       "dest": "https://whois.freeaiapi.xyz/:1",
       "methods": ["GET"]
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1",
-      "headers": {"Cache-Control": "public, max-age=3600"}
     }
   ]
 }
