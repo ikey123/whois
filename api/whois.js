@@ -15,7 +15,7 @@ async function lookupWhois() {
         console.log('Response:', response);
 
         if (!response.ok) {
-            throw new Error(`Error: Fetch failed with status ${response.status}`);
+            throw new Error(`Fetch failed with status ${response.status}`);
         }
 
         const responseData = await response.json();
