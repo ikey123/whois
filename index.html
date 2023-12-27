@@ -18,38 +18,32 @@
     </div>
 
     <script>
-        function lookupWhois() {
-            var fullDomain = document.getElementById('domain').value;
-            var parts = fullDomain.split('.');
-            var name = parts[0];
-            var suffix = parts[1];
+        async function lookupWhois() {
+            try {
+                const fullDomain = document.getElementById('domain').value;
+                const parts = fullDomain.split('.');
+                const name = parts[0];
+                const suffix = parts[1];
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', `/api/whois/?name=${name}&suffix=${suffix}`, true);
-            
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    try {
-                        var responseData = JSON.parse(xhr.responseText);
-                        if (responseData.success) {
-                            var result = `Whois information for ${fullDomain}: ${responseData.whoisData}`;
-                        } else {
-                            var result = `Error: ${responseData.message}`;
-                        }
-                        document.getElementById('result').innerHTML = result;
-                    } catch (error) {
-                        console.error('Error parsing JSON response:', error);
-                    }
-                } else {
-                    console.error('Request failed with status:', xhr.status);
+                const response = await fetch(`/api/whois/?name=${name}&suffix=${suffix}`);
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
                 }
-            };
 
-            xhr.onerror = function() {
-                console.error('An error occurred during the request.');
-            };
+                const responseData = await response.json();
 
-            xhr.send();
+                if (responseData.success) {
+                    const result = `Whois information for ${fullDomain}: ${responseData.whoisData}`;
+                    document.getElementById('result').innerHTML = result;
+                } else {
+                    const result = `Error: ${responseData.message}`;
+                    document.getElementById('result').innerHTML = result;
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
+                document.getElementById('result').innerHTML = `Error: ${error.message}`;
+            }
         }
     </script>
 </body>
