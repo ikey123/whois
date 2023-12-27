@@ -1,51 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whois Lookup</title>
-    <style>
-        /* 你的CSS样式在这里 */
-    </style>
-</head>
-<body>
-    <div id="whois-container">
-        <h1>Whois Lookup</h1>
-        <label for="domain">Enter Domain:</label>
-        <input type="text" id="domain" placeholder="example.com">
-        <button onclick="lookupWhois()">Lookup</button>
-        <div id="result"></div>
-    </div>
+async function lookupWhois() {
+    try {
+        const fullDomain = document.getElementById('domain').value;
+        const parts = fullDomain.split('.');
+        const name = parts[0];
+        const suffix = parts[1];
 
-    <script>
-        async function lookupWhois() {
-            try {
-                const fullDomain = document.getElementById('domain').value;
-                const parts = fullDomain.split('.');
-                const name = parts[0];
-                const suffix = parts[1];
+        // 修改这里的URL为你的Vercel Serverless Function的路径
+        const response = await fetch(`/api/whois?name=${name}&suffix=${suffix}`);
 
-                // 修改这里的URL为你的Vercel Serverless Function的路径
-                const response = await fetch(`/api/whois?name=${name}&suffix=${suffix}`);
-
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-
-                const responseData = await response.json();
-
-                if (responseData.success) {
-                    const result = `Whois information for ${fullDomain}: ${responseData.whoisData}`;
-                    document.getElementById('result').innerHTML = result;
-                } else {
-                    const result = `Error: ${responseData.message}`;
-                    document.getElementById('result').innerHTML = result;
-                }
-            } catch (error) {
-                console.error('An error occurred:', error);
-                document.getElementById('result').innerHTML = `Error: ${error.message}`;
-            }
+        if (!response.ok) {
+            throw new Error(`Error: Fetch failed with status ${response.status}`);
         }
-    </script>
-</body>
-</html>
+
+        const responseData = await response.json();
+
+        if (responseData.success) {
+            const result = `Whois information for ${fullDomain}: ${responseData.whoisData}`;
+            document.getElementById('result').innerHTML = result;
+        } else {
+            const result = `Error: ${responseData.message}`;
+            document.getElementById('result').innerHTML = result;
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+        document.getElementById('result').innerHTML = `Error: ${error.message}`;
+    }
+}
