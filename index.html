@@ -25,7 +25,8 @@
                 const name = parts[0];
                 const suffix = parts[1];
 
-                const response = await fetch(`/api/whois/?name=${name}&suffix=${suffix}`);
+                // 修改这里的URL为你的Vercel Serverless Function的路径
+                const response = await fetch(`/api/whois?name=${name}&suffix=${suffix}`);
 
                 if (!response.ok) {
                     throw new Error(`Error: ${response.statusText}`);
